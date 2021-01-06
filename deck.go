@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"io/ioutil"
 	"fmt"
 	"strings"
 )
@@ -45,5 +47,29 @@ func deal(d deck, handSize int) (deck, deck) {
 func (d deck) toString() string {
 	// use the Join func from stringS to join Slices with a comma(",")
 	return strings.Join([]string(d), ",")
+
+}
+
+// Save to File Function
+func (d deck) saveToFile(filename string) error {
+	return ioutil.WriteFile(filename, []byte(d.toString()), 0666)
+}
+
+
+// Read from a File
+func newDeckFromFile(filename string) deck {
+	bs, err := ioutil.ReadFile(filename)
+
+	if err != nil {
+		// Log the error and entirely quit the program
+		fmt.Println("Error:", err)
+		os.Exit(1)
+	} 
+
+	// convert byte to a string type
+	s := strings.Split(string(bs), ",")
+	
+	// change and return the type of string to a deck typre
+	return deck(s)
 
 }
